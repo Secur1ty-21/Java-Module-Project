@@ -1,4 +1,3 @@
-import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
 
 public class Main {
@@ -7,7 +6,8 @@ public class Main {
     public static void main(String[] args) {
         int numOfPeople = getNumOfPeople(); // Колисчестов людей в компании.
         Calculator calculator = new Calculator(); // Модель хранения продуктов.
-        addsProductsInList(calculator); // Добавляем продукты в модель.
+        addsProductsInList(calculator, true); // Добавляем продукты в модель. 1 способ.
+        //addsProductsInList(calculator); // Добавляем продукты в модель. 2 способ.
         printResults(calculator, numOfPeople); // Печатаем результат.
     }
 
@@ -38,7 +38,42 @@ public class Main {
     }
 
     /**
-     * Добавляет товары в список и подсчитывает общую сумму за них.
+     * Добавляет товары в список и подсчитывает общую сумму за них. Берет информацию из двух строк.
+     *
+     * @param calculator Экземляр класса, со списком товаров.
+     * @param change     Маркер чтобы использовать другой способ
+     */
+    public static void addsProductsInList(Calculator calculator, boolean change) {
+        String name; // Имя товара.
+        String price; // Цена товара.
+        while (true) {
+            System.out.println("Введите имя товара"); // Просим пользователя ввести имя товара.
+            name = scanner.nextLine(); // Получаем имя товара.
+            System.out.println("Введите цену товара в формате -> 'рубли.копейки' [10.45, 11.40]"); // Просим пользователя ввести имя товара.
+            price = scanner.nextLine(); // Получаем цену товара текстом.
+            if (name.isEmpty() || price.isEmpty()) {
+                System.out.println("Неправильный ввод, повторите попытку!"); // Сообщение об ошибке.
+                continue;
+            }
+            try { // Пробуем текстовую цену товара преобразовать в вещественное число.
+                calculator.addProduct(name, Float.parseFloat(price)); // Добавление товара в список.
+            } catch (NumberFormatException e) {
+                System.out.println("Неправильный ввод, повторите попытку! Убедитесь что правильно указали цену!"); // Сообщение об ошибке.
+                continue;
+            }
+            System.out.println("Товар был успешно добавлен!"); // Сообщение об успешном добавлении.System.out.println("Хотите добавить еще один продукт?\nВведите \"Завершить\" чтобы закончить добавление товаров.\nВведите любую букву для продолжения."); // Спрашиваем пользователя, хочет ли он добавить еще один товар.
+            System.out.println("Хотите добавить еще один продукт?\n" +
+                    "1.Введите \"Завершить\" чтобы закончить добавление товаров.\n" +
+                    "2.Введите любой символ для продолжения.");
+            name = scanner.nextLine(); // Получаем ответ на вопрос.
+            if (name.equalsIgnoreCase("завершить")) { // Если пользователь ввел "Завершить", выходим из цикла.
+                break;
+            }
+        }
+    }
+
+    /**
+     * Добавляет товары в список и подсчитывает общую сумму за них. Берет информацию из одной строки.
      *
      * @param calculator Экземляр класса, со списком товаров.
      */
@@ -48,7 +83,7 @@ public class Main {
         String price; // Цена товара.
         int[] indexes = new int[4]; // Массив индексов для вытаскивания подстроки.
         while (true) {
-            System.out.println("Введите имя товара и его цену в соответствии с форматом, чтобы добавить. Формат -> \"'рубли.копейки' [10.45, 11.40]\"."); // Просим пользователя ввести товар.
+            System.out.println("Введите имя товара и его цену в соответствии с форматом, чтобы добавить. Формат -> \"'имя товара' 10.0\"."); // Просим пользователя ввести товар.
             userInputAdd = scanner.nextLine(); // Получаем пользовательский ввод.
             if (!userInputAdd.isEmpty()) { // Если пользователь что-то ввел.
                 parseUserAddInput(userInputAdd, indexes);
@@ -82,7 +117,7 @@ public class Main {
                 continue;
             }
             System.out.println("Хотите добавить еще один продукт?\nВведите \"Завершить\" чтобы закончить добавление товаров.\nВведите любую букву для продолжения."); // Спрашиваем пользователя, хочет ли он добавить еще один товар.
-            userInputAdd = scanner.nextLine(); // Получаем ответ на вопрос
+            userInputAdd = scanner.nextLine(); // Получаем ответ на вопрос.
             if (userInputAdd.equalsIgnoreCase("завершить")) { // Если пользователь ввел "Завершить", выходим из цикла.
                 break;
             }
@@ -144,6 +179,7 @@ public class Main {
 
     /**
      * Очистка массива от значений
+     *
      * @param indexes Массив для обнуления
      */
     public static void clearIndexes(int[] indexes) {

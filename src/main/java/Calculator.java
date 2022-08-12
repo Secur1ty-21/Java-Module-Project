@@ -3,10 +3,11 @@ import java.util.List;
 
 public class Calculator {
     private float totalAmount;
+    // Не Map с сохранением цены т.к. в сохранении цены кажого товора нет необходимости по заданию.
     private final List<String> products;
 
     /**
-     * Добавление товаров в калькулятор.
+     * Добавление товара в калькулятор.
      *
      * @param name  имя товара.
      * @param price цена товара.
